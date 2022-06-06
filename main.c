@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define SIZE 5
 
-#define SIZE 10
+// Nama  : Putu Ode Irfan Ardika
+// Kelas : B
+// NIM   : 2108561083
 
 struct node
 {
@@ -12,16 +15,18 @@ struct node *place[SIZE];
 
 void input();
 void view();
+void search();
 
 int main(){
-    char pilihan;
     int jumlh, data;
-    menu:
-    printf("=== PROGRAM OPEN HASHING ===\n\n");
-    for (int i = 0; i < SIZE; i++)
+    char pilihan;
+    for (int i = 0; i < SIZE; i++) //set array to NULL
     {
         place[i] = NULL;
     }
+    menu:
+    system("cls");
+    printf("=== PROGRAM OPEN HASHING ===\n\n");
     printf("Menu: \n"
            "1. Input Data\n2. View Data\n3. Cari Data\n4. Keluar\n"
            "Masukan Pilihan: ");
@@ -29,41 +34,62 @@ int main(){
     switch (pilihan)
     {
     case '1':
-        printf("Jumlah Data : ");scanf("%d", &jumlh);
-        for (int i = 0; i < jumlh; i++)
-        {
-            printf("Masukan Data: ");scanf("%d", &data);
-            input(data);
-        }
-        getchar();getchar();
+        input();
+        while(getchar() != '\n');
+        system("pause");
         goto menu;
         break;
     case '2':
         view();
+        while(getchar() != '\n');
+        system("pause");
+        goto menu;
+        
+    case '3':
+        search();
+        while(getchar() != '\n');
+        system("pause");
+        goto menu;
+    case '4':
+        return 0;
+        break;
     default:
+        printf("\nPilihan Tidak Ada\n");
+        getchar();getchar();
+        goto menu;
         break;
     }
 }
 
-void input(int inputan){
+void input(){
+    int jumlh,nilai;
     int key;
-    struct node *new = malloc(sizeof(struct node));
-    new->data = input;
-    new->next = NULL;
-    key = inputan % SIZE;
-
-    if(place[key] == NULL)
+    printf("Jumlah Data : ");
+    scanf("%d", &jumlh);
+    for (int i = 0; i < jumlh; i++)
     {
-        place[key] = new;
-    } 
-    else
-    {
-        struct node *temp = place[key];
-        while (temp->next)
+        printf("Masukan Data: ");scanf("%d", &nilai);
+        //create a new node
+        struct node *new = malloc(sizeof(struct node)); 
+        new->data = nilai;
+        new->next = NULL;
+        //find a array to put the data
+        key = nilai % SIZE;
+        if(place[key] == NULL)
         {
-            temp = temp->next;
+            //check if the array is empty
+            place[key] = new; 
+        } 
+        else
+        {
+            struct node *temp = place[key];
+            //finding the last node before NULL
+            while (temp->next)
+            {
+                temp = temp->next;
+            }
+            temp->next = new; //new -> new(new data)-> NULL
         }
-        temp->next = new;
     }
 }
 
@@ -80,4 +106,25 @@ void view(){
         printf("NULL\n");
     }
     
+}
+
+void search(){
+    int check = 0,data;
+    printf("Masukan Data yang dicari: ");
+    scanf("%d", &data);
+    int key = data % SIZE;
+    struct node *temp = place[key];
+    while (temp)
+    {
+        if (temp->data == data) check = 1;
+        temp = temp->next;
+    }
+    if(check == 1)
+    {
+        printf("Data ada di dalam --> place[%d]\n",key);
+    }
+    if(check == 0)
+    {
+        printf("Data tidak ditemukan\n");
+    }
 }
